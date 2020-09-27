@@ -6,9 +6,11 @@ var io = require('socket.io')(http);
 const fs = require("fs");
 var admin = require('firebase-admin');
 const Joi = require('@hapi/joi');
+var bodyParser= require ('body-parser');
 
 // Middleware
 app.use(express.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 // Firebase Authentication
 var serviceAccount = require("./config/firebaseKey.json");
@@ -38,6 +40,12 @@ app.get('/login', (req, res) => {
     res.render('login');
 });
 
+app.get('/sign-up', (req, res) => {
+    res.render('signup', {
+        error: 'none'
+    });
+});
+
 app.get('/api', (req, res) => {
     res.status(400).render('splash', {
         title: 'Blaze api', // Purposely lowercase due to the font
@@ -53,8 +61,10 @@ app.get('/api/v1', (req, res) => {
 });
 
 app.post('/api/v1/users/create', (req, res) => {
+    console.log(req.body);
     const { error } = validateUser(req.body);
     if(error) return res.status(400).send(error.details[0].message);
+    if(req.body.password != req.body.confirmpassword) return res.status(400).send('The passwords do not match.');
 
     admin.auth().createUser({
         email: req.body.email,
@@ -64,10 +74,31 @@ app.post('/api/v1/users/create', (req, res) => {
         disabled: false
       })
       .then(function(userRecord) {
-        res.send("Account registered.")
+        res.send('Account registered.');
       })
       .catch(function(error) {
-        res.status(400).send(error);
+        res.status(400).send(err);
+      });
+});
+
+app.post('/sign-up', (req, res) => {
+    console.log(req.body);
+    const { error } = validateUser(req.body);
+    if(error) return res.status(400).render('signup', {error: error.details[0].message} );
+    if(req.body.password != req.body.confirmpassword) return res.status(400).render('signup', {error: 'The passwords do not match.'} );
+
+    admin.auth().createUser({
+        email: req.body.email,
+        emailVerified: false,
+        password: req.body.password,
+        username: req.body.username,
+        disabled: false
+      })
+      .then(function(userRecord) {
+        res.redirect('/login')
+      })
+      .catch(function(error) {
+        res.status(400).render('signup', {error: error} );
       });
 });
 
@@ -76,7 +107,8 @@ function validateUser(validateContent) {
     const schema = Joi.object({
         email: Joi.string().email().required(),
         username: Joi.string().required(),
-        password: Joi.string().min(8).required()
+        password: Joi.string().min(8).required(),
+        confirmpassword: Joi.string().min(8).required()
     });
 
     return schema.validate(validateContent);

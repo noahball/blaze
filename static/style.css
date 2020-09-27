@@ -74,5 +74,14 @@ html {
     font-size: 18px;
     color: #000000;
     margin-top: 8%;
-    margin-bottom: 60px;
+}
+
+.login-button:hover {
+    cursor: pointer;
+}
+
+.login-create-link {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    color: #4a4a4a;
 }

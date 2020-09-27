@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Blaze | Signup</title>
+        <link rel="stylesheet" href="https://use.typekit.net/enm4pgo.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+        <link rel="stylesheet" href="/static/style.css">
+    </head>
+    <body>
+            <h1 class="title logo splash-logo top-logo">Blaze</h1>
+            <div class="login-box">
+                <h1 class="logo center title login-title">Welcome!</h1>
+                <form class="center" method="POST" action="/sign-up">
+                    <input class="login-field login-field-email" placeholder="Username" type="text" id="username" name="username"><br><br>
+                    <input class="login-field login-field-password" placeholder="Email" type="email" id="email" name="email"><br><br>
+                    <input class="login-field login-field-password" placeholder="Password" type="password" id="password" name="password"><br><br>
+                    <input class="login-field login-field-password" placeholder="Confirm Password" type="password" id="confirmpassword" name="confirmpassword"><br><br>
+                    <input class="login-button" type="submit" value="Login">
+                  </form>
+                  <a href="/login"><p class="login-create-link center">Already have an account?</p></a> 
+            </div>
+            <%if (error != 'none') { %>
+
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+                <script>
+                    Swal.fire(
+                        'Uh oh',
+                        '<%= error %>',
+                        'error'
+                    )
+                </script>
+            <% } %>
+    </body>
+</html>
