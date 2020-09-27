@@ -1,0 +1,19 @@
+{
+  "name": "blaze",
+  "version": "1.0.0",
+  "description": "Chat application like Discord.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ."
+  },
+  "author": "Noah Ball",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "firebase-admin": "^9.2.0",
+    "socket.io": "^2.3.0"
+  }
+}
