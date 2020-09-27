@@ -7,12 +7,14 @@ const fs = require("fs");
 var admin = require('firebase-admin');
 const Joi = require('@hapi/joi');
 var bodyParser = require('body-parser');
+const cookieParser = require("cookie-parser");
 
 // Middleware
 app.use(express.json());
 app.use(bodyParser.urlencoded({
     extended: false
 }));
+app.use(cookieParser());
 
 // Firebase Authentication
 var serviceAccount = require("./config/firebaseKey.json");
@@ -47,6 +49,21 @@ app.get('/sign-up', (req, res) => {
     res.render('signup', {
         error: 'none'
     });
+});
+
+app.get('/servers', (req, res) => {
+    var idToken = req.cookies['sessionid'];
+    console.log(idToken);
+
+    admin.auth().verifyIdToken(idToken)
+        .then(function (decodedToken) {
+            let uid = decodedToken.uid;
+            console.log(uid);
+            continueServers(uid);
+
+        }).catch(function(error) {
+            res.status(400).send("error");
+          });
 });
 
 app.get('/api', (req, res) => {
@@ -166,6 +183,12 @@ function validateGuild(validateContent) {
     return schema.validate(validateContent);
 }
 
+function continueServers(uid) {
+    var serversRef = db.ref(`users/` + uid + `/guilds`);
+    serversRef.once('value', function(snapshot) {
+        console.log(snapshot.val());
+      });
+}
 
 // Start Express
 const port = process.env.PORT || 3000;

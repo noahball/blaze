@@ -85,3 +85,36 @@ html {
     margin-bottom: 30px;
     color: #4a4a4a;
 }
+
+.page-title {
+    float: right;
+    margin-right: 60px;
+}
+
+.page-top {
+    margin-top: 30px;
+}
+
+.server-select-icon {
+    background-color: #1C1E20;
+    height: 130px;
+    margin-top: 50px;
+    border-radius: 10px;
+    padding-top: 30px;
+}
+
+.columns {
+    width: 100%;
+    margin-left: 1px;
+}
+
+.server-select-icon h1 {
+    text-align: center;
+    margin-bottom: 30px !important;
+}
+
+.server-select-icon h3 {
+    text-align: center;
+    color: #FFFFFF;
+    font-size: 15px;
+}
