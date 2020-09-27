@@ -82,7 +82,6 @@ app.post('/api/v1/users/create', (req, res) => {
 });
 
 app.post('/sign-up', (req, res) => {
-    console.log(req.body);
     const { error } = validateUser(req.body);
     if(error) return res.status(400).render('signup', {error: error.details[0].message} );
     if(req.body.password != req.body.confirmpassword) return res.status(400).render('signup', {error: 'The passwords do not match.'} );

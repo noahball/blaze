@@ -1,22 +1,59 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Blaze | Login</title>
-        <link rel="stylesheet" href="https://use.typekit.net/enm4pgo.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
-        <link rel="stylesheet" href="/static/style.css">
-    </head>
-    <body>
-            <h1 class="title logo splash-logo top-logo">Blaze</h1>
-            <div class="login-box">
-                <h1 class="logo center title login-title">Welcome Back</h1>
-                <form class="center" action="/api/v1/users/login">
-                    <input class="login-field login-field-email" placeholder="Email" type="email" id="email" name="email"><br><br>
-                    <input class="login-field login-field-password" placeholder="Password" type="password" id="password" name="password"><br><br>
-                    <input class="login-button" type="submit" value="Login">
-                    <a href="/sign-up"><p class="login-create-link">Don't have an account?</p></a>
-                  </form> 
-            </div>
-    </body>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Blaze | Login</title>
+    <link rel="stylesheet" href="https://use.typekit.net/enm4pgo.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+    <h1 class="title logo splash-logo top-logo">Blaze</h1>
+    <div class="login-box">
+        <h1 class="logo center title login-title">Welcome Back</h1>
+        <div class="center">
+            <input class="login-field login-field-email" placeholder="Email" type="email" id="email"
+                name="email"><br><br>
+            <input class="login-field login-field-password" placeholder="Password" type="password" id="password"
+                name="password"><br><br>
+            <input class="login-button" onclick="login()" type="submit" value="Login">
+        </div>
+        <a class="center" href="/sign-up">
+            <p class="login-create-link">Don't have an account?</p>
+        </a>
+    </div>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-analytics.js"></script>
+
+    <!-- Firebase Auth -->
+    <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-auth.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        var firebaseConfig = {
+            apiKey: "AIzaSyCijAyTWZa557UPTfxivrd4J9Z8rPWCEaw",
+            authDomain: "blaze-37ca6.firebaseapp.com",
+            databaseURL: "https://blaze-37ca6.firebaseio.com",
+            projectId: "blaze-37ca6",
+            storageBucket: "blaze-37ca6.appspot.com",
+            messagingSenderId: "559947757820",
+            appId: "1:559947757820:web:a40dce606e65a2f3073f79",
+            measurementId: "G-DELJQ9BK97"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="/static/js/login.js"></script>
+</body>
+
 </html>
