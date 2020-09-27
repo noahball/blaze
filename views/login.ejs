@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Blaze | Login</title>
+        <link rel="stylesheet" href="https://use.typekit.net/enm4pgo.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+        <link rel="stylesheet" href="/static/style.css">
+    </head>
+    <body>
+            <h1 class="title logo splash-logo top-logo">Blaze</h1>
+            <div class="login-box">
+                <h1 class="logo center title login-title">Welcome Back</h1>
+                <form class="center" action="/api/v1/users/create">
+                    <input class="login-field login-field-email" placeholder="Email" type="text" id="fname" name="fname" value="John"><br><br>
+                    <input class="login-field login-field-password" placeholder="Password" type="password" id="lname" name="lname" value="Doe"><br><br>
+                    <input class="login-button" type="submit" value="Login">
+                  </form> 
+            </div>
+    </body>
+</html>

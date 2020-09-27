@@ -34,6 +34,10 @@ app.get('/', (req, res) => {
     });
 });
 
+app.get('/login', (req, res) => {
+    res.render('login');
+});
+
 app.get('/api', (req, res) => {
     res.status(400).render('splash', {
         title: 'Blaze api', // Purposely lowercase due to the font
