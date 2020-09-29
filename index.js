@@ -66,23 +66,41 @@ app.get('/servers', (req, res) => {
             var userServersRef = db.ref(`users/` + uid + `/guilds`);
             userServersRef.once("value", function (data) {
                 var userServers = data.val();
-                
+
                 var serverNames = [];
                 var isVerified = [];
-                for (var i = 0; i < userServers.length; i++) {
-                    var allServersRef = db.ref(`guilds/` + userServers[i]);
+                var memberCount = [];
+                try {
+                    for (var i = 0; i < userServers.length; i++) {
+                        var allServersRef = db.ref(`guilds/` + userServers[i]);
 
-                    allServersRef.once("value", function (data) {
-                        serverNames.push(data.val().guildName);
-                        isVerified.push(data.val().isVerified);
+                        allServersRef.once("value", function (data) {
+                            serverNames.push(data.val().guildName);
+                            isVerified.push(data.val().isVerified);
+                            memberCount.push(data.val().memberCount);
 
-                        if(serverNames.length == userServers.length) {
-                            res.status(400).render('servers', {
-                                userServers: userServers,
-                                serverNames: serverNames,
-                                isVerified: isVerified
-                            });
-                        }
+                            if (serverNames.length == userServers.length) {
+                                res.render('servers', {
+                                    userServers: userServers,
+                                    serverNames: serverNames,
+                                    isVerified: isVerified,
+                                    memberCount: memberCount,
+                                    noServers: false
+                                });
+                            }
+                        });
+                    }
+                } catch (err) {
+                    var userServers = [];
+                    var serverNames = [];
+                    var isVerified = [];
+                    var memberCount = [];
+                    res.render('servers', {
+                        userServers: userServers,
+                        serverNames: serverNames,
+                        isVerified: isVerified,
+                        memberCount: memberCount,
+                        noServers: true
                     });
                 }
             });
@@ -90,6 +108,10 @@ app.get('/servers', (req, res) => {
         }).catch(function (error) {
             res.redirect('/login');
         });
+});
+
+app.get('/server/:serverID', (req, res) => {
+    res.render('server');
 });
 
 app.get('/api', (req, res) => {
@@ -162,9 +184,6 @@ app.post('/api/v1/guilds/create', (req, res) => {
     } = validateGuild(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    var guildName = req.body.guildName;
-    var isVerified = req.body.isVerified;
-
     var idToken = req.body.guildOwnerToken;
     admin.auth().verifyIdToken(idToken)
         .then(function (decodedToken) {
@@ -175,12 +194,26 @@ app.post('/api/v1/guilds/create', (req, res) => {
             guildsRef.set({
                 guildName: req.body.guildName,
                 guildOwner: uid,
-                isVerified: req.body.isVerified
+                isVerified: false,
+                memberCount: 1
             });
+
+            var usersRef = ref.child(`users/` + uid);
+            usersRef.once("value", function (data) {
+                var currentID = data.val().currentID;
+                var newID = currentID + 1;
+                var usersRef = ref.child(`users/` + uid);
+                usersRef.update({
+                    [`guilds/` + currentID]: guildID,
+                    currentID: newID
+                });
+            });
+
             res.send(`Guild with ID: ` + guildID + ` created!`)
 
         }).catch(function (error) {
-            res.status(400).send(error);
+            console.log(error);
+            res.send(error);
         });
 
 
@@ -201,12 +234,12 @@ function validateUser(validateContent) {
 function validateGuild(validateContent) {
     const schema = Joi.object({
         guildName: Joi.string().required(),
-        guildOwnerToken: Joi.string().required(),
-        isVerified: Joi.bool().required()
+        guildOwnerToken: Joi.string().required()
     });
 
     return schema.validate(validateContent);
 }
+
 
 // Start Express
 const port = process.env.PORT || 3000;
