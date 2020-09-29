@@ -18,6 +18,9 @@ app.use(cookieParser());
 
 // Firebase Authentication
 var serviceAccount = require("./config/firebaseKey.json");
+const {
+    render
+} = require('ejs');
 
 // Init Firebase
 admin.initializeApp({
@@ -53,17 +56,35 @@ app.get('/sign-up', (req, res) => {
 
 app.get('/servers', (req, res) => {
     var idToken = req.cookies['sessionid'];
-    console.log(idToken);
+    if (idToken == null) {
+        return res.status(403).send('<script>window.location = \'/login\'</script>');
+    }
 
     admin.auth().verifyIdToken(idToken)
         .then(function (decodedToken) {
             let uid = decodedToken.uid;
-            console.log(uid);
-            continueServers(uid);
+            var userServersRef = db.ref(`users/` + uid + `/guilds`);
+            userServersRef.once("value", function (data) {
+                var userServers = data.val();
+                
+                var serverNames = [];
+                for (var i = 0; i < userServers.length; i++) {
+                    var allServersRef = db.ref(`guilds/` + userServers[i] + `/guildName`);
+                    allServersRef.once("value", function (data) {
+                        serverNames.push(data.val());
+                        if(serverNames.length == userServers.length) {
+                            res.status(400).render('servers', {
+                                userServers: userServers,
+                                serverNames: serverNames
+                            });
+                        }
+                    });
+                }
+            });
 
-        }).catch(function(error) {
-            res.status(400).send("error");
-          });
+        }).catch(function (error) {
+            res.redirect('/login');
+        });
 });
 
 app.get('/api', (req, res) => {
@@ -81,7 +102,6 @@ app.get('/api/v1', (req, res) => {
 });
 
 app.post('/api/v1/users/create', (req, res) => {
-    console.log(req.body);
     const {
         error
     } = validateUser(req.body);
@@ -144,20 +164,20 @@ app.post('/api/v1/guilds/create', (req, res) => {
     admin.auth().verifyIdToken(idToken)
         .then(function (decodedToken) {
             let uid = decodedToken.uid;
-            console.log(uid);
-            res.send('Woohoo! It works :D')
 
-            var guildsRef = ref.child(`guilds/` + req.body.guildName);
+            var guildID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            var guildsRef = ref.child(`guilds/` + guildID);
             guildsRef.set({
-                    guildName: req.body.guildName,
-                    guildOwner: uid,
-                    isVerified: req.body.isVerified
+                guildName: req.body.guildName,
+                guildOwner: uid,
+                isVerified: req.body.isVerified
             });
+            res.send(`Guild with ID: ` + guildID + ` created!`)
 
-        }).catch(function(error) {
+        }).catch(function (error) {
             res.status(400).send(error);
-          });
-          
+        });
+
 
 });
 
@@ -181,13 +201,6 @@ function validateGuild(validateContent) {
     });
 
     return schema.validate(validateContent);
-}
-
-function continueServers(uid) {
-    var serversRef = db.ref(`users/` + uid + `/guilds`);
-    serversRef.once('value', function(snapshot) {
-        console.log(snapshot.val());
-      });
 }
 
 // Start Express
