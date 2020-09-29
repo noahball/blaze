@@ -2,23 +2,60 @@
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Blaze | Login</title>
-    <link rel="stylesheet" href="https://use.typekit.net/enm4pgo.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
-    <link rel="stylesheet" href="/static/css/style.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blaze | Your Servers</title>
+  <link rel="stylesheet" href="https://use.typekit.net/enm4pgo.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
 </head>
 
 <body>
-    <div class="page-top">
-        <h1><span class="title logo top-logo page-top-logo">Blaze</span><span class="title page-title blaze-blue">Select a Server</span></h1>
-      </div>
-        <div class="columns is-multiline center">
-            <% for (var i = 0; i < userServers.length; i++) { %>
-              <div class="column is-one-fifth"><center><div class="server-select-icon"><h1 class="title blaze-blue"><%= serverNames[i] %> <i class="fa fa-check-circle" aria-hidden="true"></i></h1><h3 class="subtitle">0 Members</h3></div></center></div>
-            <% } %>
-          </div>
+  <div class="page-top">
+    <h1><span class="title logo top-logo page-top-logo">Blaze</span><span class="title page-title blaze-blue">Select a
+        Server</span></h1>
+  </div>
+  <div class="columns is-multiline center">
+    <% for (var i = 0; i < userServers.length; i++) { %>
+    <div class="column is-one-fifth">
+      <center>
+        <div class="server-select-icon">
+          <h1 class="title blaze-blue"><%= serverNames[i] %> <% if(isVerified[i] == true) {%><i class="fa fa-check-circle" aria-hidden="true"></i> <% } %></h1>
+          <h3 class="subtitle">0 Members</h3>
+        </div>
+      </center>
+    </div>
+    <% } %>
+  </div>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-analytics.js"></script>
+
+    <!-- Firebase Auth -->
+    <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-auth.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        var firebaseConfig = {
+            apiKey: "AIzaSyCijAyTWZa557UPTfxivrd4J9Z8rPWCEaw",
+            authDomain: "blaze-37ca6.firebaseapp.com",
+            databaseURL: "https://blaze-37ca6.firebaseio.com",
+            projectId: "blaze-37ca6",
+            storageBucket: "blaze-37ca6.appspot.com",
+            messagingSenderId: "559947757820",
+            appId: "1:559947757820:web:a40dce606e65a2f3073f79",
+            measurementId: "G-DELJQ9BK97"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+    </script>
+  <script src="/static/js/getIDToken.js"></script>
 </body>
 
 </html>

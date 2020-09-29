@@ -5,7 +5,7 @@ firebase.auth().onAuthStateChanged(function (user) {
         firebase.auth().currentUser.getIdToken( /* forceRefresh */ true).then(function (idToken) {
             console.log(idToken);
             document.cookie = `sessionid=` + idToken + `; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/`;
-            // window.location = "/servers";
+            window.location = "/servers";
         }).catch(function (error) {
             // Handle error
         });

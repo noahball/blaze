@@ -68,14 +68,19 @@ app.get('/servers', (req, res) => {
                 var userServers = data.val();
                 
                 var serverNames = [];
+                var isVerified = [];
                 for (var i = 0; i < userServers.length; i++) {
-                    var allServersRef = db.ref(`guilds/` + userServers[i] + `/guildName`);
+                    var allServersRef = db.ref(`guilds/` + userServers[i]);
+
                     allServersRef.once("value", function (data) {
-                        serverNames.push(data.val());
+                        serverNames.push(data.val().guildName);
+                        isVerified.push(data.val().isVerified);
+
                         if(serverNames.length == userServers.length) {
                             res.status(400).render('servers', {
                                 userServers: userServers,
-                                serverNames: serverNames
+                                serverNames: serverNames,
+                                isVerified: isVerified
                             });
                         }
                     });
