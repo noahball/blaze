@@ -111,7 +111,18 @@ app.get('/servers', (req, res) => {
 });
 
 app.get('/server/:serverID', (req, res) => {
-    res.render('server');
+    var idToken = req.cookies['sessionid'];
+    if (idToken == null) {
+        return res.status(403).send('<script>window.location = \'/login\'</script>');
+    }
+
+    admin.auth().verifyIdToken(idToken)
+    .then(function (decodedToken) {
+        let uid = decodedToken.uid;
+        res.render('server');
+    }).catch(function (error) {
+        res.redirect('/login');
+    });
 });
 
 app.get('/api', (req, res) => {

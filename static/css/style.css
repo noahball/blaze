@@ -1,5 +1,7 @@
-html {
+html, body {
     background-color: #2C2F33;
+    height: 100%;
+    overflow: hidden;
 }
 
 .container {
@@ -121,4 +123,82 @@ html {
 
 .fa-check-circle {
     font-size: 20px;
+}
+
+.server-view-top {
+    margin-top: 0px;
+    padding-top: 30px;
+    padding-bottom: 25px;
+    height: 90px;
+    background-color: #1C1E20;
+}
+
+.server-view-top span {
+    height: 1%;
+}
+
+.server-view-left {
+    float: left;
+    width: 10%;
+    background-color: #1C1E20;
+    height: 100%;
+    max-height: inherit;
+    padding-top: 1%;
+    overflow: scroll;
+    overflow-y: auto;
+}
+
+.server-view-left li {
+    padding-left: 5%;
+    margin-right: 12%;
+    margin-top: 4%;
+    margin-bottom: 20%;
+    background-color: #23272A;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    color: #d8d8d8;
+}
+
+.member-view-right {
+    float: right;
+    width: 10%;
+    background-color: #1C1E20;
+    height: 100%;
+    max-height: inherit;
+    padding-top: 1%;
+    overflow: scroll;
+    overflow-y: auto;
+}
+
+.member-view-right li {
+    padding-left: 5%;
+    margin-left: 12%;
+    margin-top: 4%;
+    margin-bottom: 20%;
+    background-color: #23272A;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    color: #d8d8d8;
+}
+
+.server-view-name {
+    margin-top: -4px;
+    margin-right: 30px;
+}
+
+.message {
+    padding-left: 4%;
+    padding-top: 0.2%;
+    padding-bottom: 0.3%;
+    margin-top: 0.9%;
+    list-style: none;
+    background-color: #23272A;
+    color: #d8d8d8;
+    margin-bottom: 0px !important;
+}
+
+.message-container {
+    overflow: scroll;
+    overflow-y: auto;
+    max-height: 100%;
 }
