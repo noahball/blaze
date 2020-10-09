@@ -45,43 +45,43 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.render('login');
+    res.render('login'); // Render login page (authentication handled frontend)
 });
 
 app.get('/sign-up', (req, res) => {
-    res.render('signup', {
-        error: 'none'
+    res.render('signup', { // Render signup
+        error: 'none' // Signup page is also used as an endpoint. Error is returned when there is an issue with the user's credentials
     });
 });
 
-app.get('/servers', (req, res) => {
-    var idToken = req.cookies['sessionid'];
-    if (idToken == null) {
-        return res.status(403).send('<script>window.location = \'/login\'</script>');
+app.get('/servers', (req, res) => { // Render servers page
+    var idToken = req.cookies['sessionid']; // Get user's Firebase ID token from cookies (set manually using frontend firebase on page load)
+    if (idToken == null) { // If no cookie is set (user hasn't logged in)
+        return res.status(403).send('<script>window.location = \'/login\'</script>'); // Return JS redirect response
     }
 
-    admin.auth().verifyIdToken(idToken)
-        .then(function (decodedToken) {
-            let uid = decodedToken.uid;
-            var userServersRef = db.ref(`users/` + uid + `/guilds`);
-            userServersRef.once("value", function (data) {
-                var userServers = data.val();
+    admin.auth().verifyIdToken(idToken) // Firebase function to decode the token to reveal the user's UID
+        .then(function (decodedToken) { // Pass the token
+            let uid = decodedToken.uid;  // Get decoded token
+            var userServersRef = db.ref(`users/` + uid + `/guilds`); // Set ref
+            userServersRef.once("value", function (data) { // Use ref to get data
+                var userServers = data.val(); // Server IDs stored in an ""array"" in Firebase
 
-                var serverNames = [];
-                var isVerified = [];
-                var memberCount = [];
-                try {
-                    for (var i = 0; i < userServers.length; i++) {
-                        var allServersRef = db.ref(`guilds/` + userServers[i]);
+                var serverNames = []; // Set blank since data isn't retrieved - if all else fails and crashes
+                var isVerified = []; // ..
+                var memberCount = [];// ..
+                try { // Try this because errors occur
+                    for (var i = 0; i < userServers.length; i++) { // For every single server in the array. Server array ID is equal to i.
+                        var allServersRef = db.ref(`guilds/` + userServers[i]); // Get specific server's info ref.
 
-                        allServersRef.once("value", function (data) {
-                            serverNames.push(data.val().guildName);
-                            isVerified.push(data.val().isVerified);
-                            memberCount.push(data.val().memberCount);
+                        allServersRef.once("value", function (data) { // Get data
+                            serverNames.push(data.val().guildName); // Update array
+                            isVerified.push(data.val().isVerified);// ..
+                            memberCount.push(data.val().memberCount);// ..
 
-                            if (serverNames.length == userServers.length) {
-                                res.render('servers', {
-                                    userServers: userServers,
+                            if (serverNames.length == userServers.length) { // If locally stored array is the same length as Firebase array length
+                                res.render('servers', { // Render
+                                    userServers: userServers, // Return arrays that are then handled via EJS
                                     serverNames: serverNames,
                                     isVerified: isVerified,
                                     memberCount: memberCount,
@@ -90,8 +90,8 @@ app.get('/servers', (req, res) => {
                             }
                         });
                     }
-                } catch (err) {
-                    var userServers = [];
+                } catch (err) { // If error - most likely user is in no servers
+                    var userServers = []; // Set arrays blank so that it knows the user is in no servers
                     var serverNames = [];
                     var isVerified = [];
                     var memberCount = [];
@@ -100,13 +100,13 @@ app.get('/servers', (req, res) => {
                         serverNames: serverNames,
                         isVerified: isVerified,
                         memberCount: memberCount,
-                        noServers: true
+                        noServers: true // Oh wait wtf is this... so it finds out this way? Can't be stuffed to check
                     });
                 }
             });
 
         }).catch(function (error) {
-            res.redirect('/login');
+            res.redirect('/login'); // reee we made an oopsie... redirect to login
         });
 });
 
